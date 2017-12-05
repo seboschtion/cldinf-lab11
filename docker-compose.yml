@@ -1,38 +1,63 @@
-version: "3.3"
+version: "3.4"
 
 services:
     db:
         image: "postgres:9.6"
-        restart: always
         environment:
             PGDATA: /var/lib/postgresql/data/pgdata
             POSTGRES_PASSWORD: b245005e8b3df99ac373f72240ba14df
-        volumes:
-            - ~/temp/pgdata:/var/lib/postgresql/data/pgdata
         networks:
             - dbnet
         deploy:
             replicas: 1
             resources:
                 limits:
-                    cups: "0.1"
+                    cpus: "0.1"
                     memory: 100M
             restart_policy:
                 condition: any
                 window: 180s
+            update_config:
+                parallelism: 1
+                delay: 10s
+                failure_action: rollback
+                monitor: 10s
+                max_failure_ratio: 0.1
+                order: stop-first
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"] 
+            interval: 30s
+            timeout: 30s
+            retries: 3
 
     api:
-        build: ./api
-        restart: always
+        # build: "./api"
+        image: "192.168.99.1:5000/cldinflab11_api"
         networks:
             - apinet
             - dbnet
         depends_on:
             - db
+        deploy:
+            replicas: 3
+            resources:
+                limits:
+                    cpus: "0.1"
+                    memory: 100M
+            restart_policy:
+                condition: any
+                window: 180s
+            update_config:
+                parallelism: 1
+                delay: 10s
+                failure_action: rollback
+                monitor: 10s
+                max_failure_ratio: 0.1
+                order: stop-first
 
     web:
-        build: ./web
-        restart: always
+        # build: "./web"
+        image: "192.168.99.1:5000/cldinflab11_web"
         networks:
             - webnet
             - apinet
@@ -40,6 +65,22 @@ services:
             - api
         ports:
             - "8080:80"
+        deploy:
+            replicas: 3
+            resources:
+                limits:
+                    cpus: "0.1"
+                    memory: 100M
+            restart_policy:
+                condition: any
+                window: 180s
+            update_config:
+                parallelism: 1
+                delay: 10s
+                failure_action: rollback
+                monitor: 10s
+                max_failure_ratio: 0.1
+                order: stop-first
 
 networks:
     dbnet:
