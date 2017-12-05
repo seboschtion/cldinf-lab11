@@ -1,0 +1,50 @@
+version: "3.3"
+
+services:
+    db:
+        image: "postgres:9.6"
+        restart: always
+        environment:
+            PGDATA: /var/lib/postgresql/data/pgdata
+            POSTGRES_PASSWORD: b245005e8b3df99ac373f72240ba14df
+        volumes:
+            - ~/temp/pgdata:/var/lib/postgresql/data/pgdata
+        networks:
+            - dbnet
+        deploy:
+            replicas: 1
+            resources:
+                limits:
+                    cups: "0.1"
+                    memory: 100M
+            restart_policy:
+                condition: any
+                window: 180s
+
+    api:
+        build: ./api
+        restart: always
+        networks:
+            - apinet
+            - dbnet
+        depends_on:
+            - db
+
+    web:
+        build: ./web
+        restart: always
+        networks:
+            - webnet
+            - apinet
+        depends_on:
+            - api
+        ports:
+            - "8080:80"
+
+networks:
+    dbnet:
+        internal: true
+    apinet:
+        internal: true
+    webnet:
+        internal: false
