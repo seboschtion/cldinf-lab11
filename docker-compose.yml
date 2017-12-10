@@ -16,12 +16,12 @@ services:
                     memory: 100M
             restart_policy:
                 condition: any
-                window: 180s
+                window: 3m
             update_config:
                 parallelism: 1
-                delay: 10s
+                delay: 3m
                 failure_action: rollback
-                monitor: 10s
+                monitor: 3m
                 max_failure_ratio: 0.1
                 order: stop-first
         healthcheck:
@@ -46,12 +46,12 @@ services:
                     memory: 100M
             restart_policy:
                 condition: any
-                window: 180s
+                window: 3m
             update_config:
                 parallelism: 1
-                delay: 10s
+                delay: 3m
                 failure_action: rollback
-                monitor: 10s
+                monitor: 3m
                 max_failure_ratio: 0.1
                 order: stop-first
 
@@ -73,12 +73,12 @@ services:
                     memory: 100M
             restart_policy:
                 condition: any
-                window: 180s
+                window: 3m
             update_config:
                 parallelism: 1
-                delay: 10s
+                delay: 3m
                 failure_action: rollback
-                monitor: 10s
+                monitor: 3m
                 max_failure_ratio: 0.1
                 order: stop-first
 
