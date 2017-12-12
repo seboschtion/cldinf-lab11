@@ -31,7 +31,7 @@ services:
             retries: 3
 
     api:
-        image: "192.168.99.1:5000/cldinflab11_api"
+        image: "seboschtion/cldinflab11_api"
         networks:
             - apinet
             - dbnet
@@ -55,7 +55,7 @@ services:
                 order: stop-first
 
     web:
-        image: "192.168.99.1:5000/cldinflab11_web"
+        image: "seboschtion/cldinflab11_web"
         networks:
             - webnet
             - apinet
